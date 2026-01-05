@@ -1,0 +1,59 @@
+<div id="steam-sale-widget" style="
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* vezme celou dostupnou výšku rodiče */
+    width: 100%;  /* zajistí plnou šířku rodiče */
+    color: #000;
+">
+  <h3 style="margin-bottom: 10px; font-size: 18px; text-align:center;">Další Steam sleva / event</h3>
+  <div id="countdown" style="
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+  "></div>
+  <div id="next-event-name" style="font-size: 14px; margin-top: 6px; color: #555; text-align:center;"></div>
+</div>
+
+<script>
+  const events = [
+    { name: "Konec Winter Sale", date: new Date("2026-01-05T18:00:00Z") },
+    { name: "Steam Next Fest 2026", date: new Date("2026-02-23T18:00:00Z") },
+    { name: "Steam Spring Sale 2026", date: new Date("2026-03-12T18:00:00Z") }
+  ];
+
+  let currentIndex = 0;
+
+  function updateCountdown() {
+    const now = new Date();
+    while (currentIndex < events.length && now >= events[currentIndex].date) {
+      currentIndex++;
+    }
+    if (currentIndex >= events.length) {
+      document.getElementById("countdown").innerHTML = "Žádné údaje o dalších sales";
+      document.getElementById("next-event-name").innerText = "";
+      clearInterval(timer);
+      return;
+    }
+
+    const target = events[currentIndex].date;
+    const diff = target - now;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("countdown").innerHTML =
+      `<span style="color:#f39c12">${days}d</span>
+       <span style="color:#e74c3c">${hours}h</span>
+       <span style="color:#3498db">${minutes}m</span>
+       <span style="color:#2ecc71">${seconds}s</span>`;
+    document.getElementById("next-event-name").innerText = events[currentIndex].name;
+  }
+
+  updateCountdown();
+  const timer = setInterval(updateCountdown, 1000);
+</script>
